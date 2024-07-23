@@ -1,0 +1,12 @@
+<!-- templates/send_interest.html -->
+
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Send Interest to {{ receiver.username }}</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Send Interest</button>
+  </form>
+{% endblock %}

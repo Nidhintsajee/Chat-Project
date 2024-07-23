@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Received Interests</h2>
+<ul>
+    {% for interest in interests %}
+    <li>{{ interest.sender.username }}: {{ interest.message }}</li>
+    {% endfor %}
+</ul>
+{% endblock %}

@@ -1,0 +1,39 @@
+<!-- templates/chat.html -->
+
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Chat with {{ other_user.username }}</h2>
+<div id="chat-log"></div>
+<form id="chat-form" action="" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Send</button>
+</form>
+
+<script>
+    const username = "{{ other_user.username }}";
+    const chatSocket = new WebSocket(
+        'ws://' + window.location.host + '/ws/chat/' + username + '/'
+    );
+
+    chatSocket.onmessage = function(e) {
+        const data = JSON.parse(e.data);
+        document.querySelector('#chat-log').innerHTML += '<p>' + data.message + '</p>';
+    };
+
+    chatSocket.onclose = function(e) {
+        console.error('Chat socket closed unexpectedly');
+    };
+
+    document.querySelector('#chat-form').onsubmit = function(e) {
+        e.preventDefault();
+        const messageInputDom = document.querySelector('#id_message');
+        const message = messageInputDom.value;
+        chatSocket.send(JSON.stringify({
+            'message': message
+        }));
+        messageInputDom.value = '';
+    };
+</script>
+{% endblock %}
